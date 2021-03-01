@@ -1,5 +1,5 @@
-import { backupScripts, TYPE_ATTRIBUTE } from './variables'
-import { isOnBlacklist } from './checks'
+import { TYPE_ATTRIBUTE } from './variables'
+import {isOnBlocklist } from './checks'
 
 // Setup a mutation observer to track DOM insertion
 export const observer = new MutationObserver(mutations => {
@@ -11,15 +11,12 @@ export const observer = new MutationObserver(mutations => {
             if(node.nodeType === 1 && node.tagName === 'SCRIPT') {
                 const src = node.src
                 const type = node.type
-                // If the src is inside the blacklist and is not inside the whitelist
-                if(isOnBlacklist(src, type)) {
-                    // We backup the node
-                    backupScripts.blacklisted.push([node, node.type])
-
+                // If the src is inside the blocklist and is not inside the approved list
+                if(isOnBlocklist(src, type)) {
                     // Blocks inline script execution in Safari & Chrome
                     node.type = TYPE_ATTRIBUTE
 
-                    // Firefox has this additional event which prevents scripts from beeing executed
+                    // Firefox has this additional event which prevents scripts from being executed
                     const beforeScriptExecuteListener = function (event) {
                         // Prevent only marked scripts from executing
                         if(node.getAttribute('type') === TYPE_ATTRIBUTE)

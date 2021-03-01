@@ -1,5 +1,5 @@
 import { TYPE_ATTRIBUTE } from './variables'
-import { isOnBlacklist } from './checks'
+import { isOnBlocklist } from './checks'
 
 const createElementBackup = document.createElement
 
@@ -24,7 +24,7 @@ document.createElement = function(...args) {
                     return originalDescriptors.src.get.call(this)
                 },
                 set(value) {
-                    if(isOnBlacklist(value, scriptElt.type)) {
+                    if(isOnBlocklist(value, scriptElt.type)) {
                         originalDescriptors.type.set.call(this, TYPE_ATTRIBUTE)
                     }
                     originalDescriptors.src.set.call(this, value)
@@ -32,7 +32,7 @@ document.createElement = function(...args) {
             },
             'type': {
                 set(value) {
-                    const typeValue = isOnBlacklist(scriptElt.src, scriptElt.type) ? TYPE_ATTRIBUTE : value
+                    const typeValue = isOnBlocklist(scriptElt.src, scriptElt.type) ? TYPE_ATTRIBUTE : value
                     originalDescriptors.type.set.call(this, typeValue)
                 }
             }
